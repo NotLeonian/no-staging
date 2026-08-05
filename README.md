@@ -105,10 +105,30 @@ If the repository already had staged changes, compare the output before and
 after rather than expecting the second command to be empty. These commands are
 inspection examples, not enforcement.
 
+## Testing
+
+Run the repository test suite without installing additional packages:
+
+```console
+python -B -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+The tests validate the JSON files, cross-check the plugin and marketplace
+metadata, verify skill discovery and the core `no-staging` instructions, and
+check local links in the Markdown documentation. They validate the repository
+structure and static instruction contract; they do not simulate an agent or
+prove that an agent will follow the skill.
+
+For pushes and pull requests, the GitHub Actions workflow runs the same test
+suite on Windows, macOS, and Ubuntu with Python 3.13.
+
 ## Repository Layout
 
 ```text
 no-staging/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── .agents/
 │   └── plugins/
 │       └── marketplace.json
@@ -117,6 +137,8 @@ no-staging/
 ├── skills/
 │   └── no-staging/
 │       └── SKILL.md
+├── tests/
+│   └── test_repository.py
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore
