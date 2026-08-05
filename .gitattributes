@@ -31,5 +31,22 @@
 # License
 LICENSE text
 
+# Python
+*.py    text diff=python
+*.pyi   text diff=python
+*.pyw   text diff=python
+
+# Generated Python binary files
+*.pyc   binary
+*.pyo   binary
+*.pyd   binary
+
 # JSON
 *.json  text
+
+# YAML
+*.yml   text
+*.yaml  text
+
+# Configuration files
+*.toml  text
