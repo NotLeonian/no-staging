@@ -40,6 +40,19 @@ validates the manifests, their cross-file metadata, skill discovery, the core
 instruction contract, and local documentation links. It does not replace the
 behavioral checks below.
 
+When Ruff, mypy, and Pyright are available, run the Python checks from the
+repository root:
+
+```console
+ruff format --check --config tests/pyproject.toml tests/test_repository.py
+ruff check --config tests/pyproject.toml tests/test_repository.py
+mypy --config-file tests/pyproject.toml tests/test_repository.py
+pyright --project tests/pyproject.toml tests/test_repository.py
+```
+
+These commands use the Python 3.13 settings in `tests/pyproject.toml`. To apply
+formatting, omit `--check` from the first command.
+
 Test behavioral changes in a disposable Git repository. Confirm that:
 
 - the agent can create, edit, move, and delete working-tree files;

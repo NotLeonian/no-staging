@@ -4,12 +4,12 @@ import unittest
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_MANIFEST_PATH = ROOT / ".codex-plugin" / "plugin.json"
 MARKETPLACE_PATH = ROOT / ".agents" / "plugins" / "marketplace.json"
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
 TEST_COMMAND = "python3 -B -m unittest discover -s tests -p 'test_*.py' -v"
+IGNORED_DOCUMENT_DIRECTORIES = {".git", ".venv"}
 
 NAME_PATTERN = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 SEMVER_PATTERN = re.compile(
@@ -220,9 +220,7 @@ class ManifestTests(unittest.TestCase):
             self.assertIsInstance(prompt, str)
             self.assertTrue(prompt.strip())
             self.assertLessEqual(len(prompt), 128)
-        self.assertTrue(
-            any(f"${self.plugin['name']}" in prompt for prompt in prompts)
-        )
+        self.assertTrue(any(f"${self.plugin['name']}" in prompt for prompt in prompts))
 
     def test_manifest_skills_path_is_local_and_exists(self):
         self.assertEqual(self.plugin["skills"], "./skills/")
@@ -256,9 +254,7 @@ class ManifestTests(unittest.TestCase):
         source_path = (ROOT / entry["source"]["path"]).resolve()
         assert_path_is_inside(self, source_path, ROOT)
         self.assertEqual(source_path, ROOT.resolve())
-        self.assertTrue(
-            (source_path / ".codex-plugin" / "plugin.json").is_file()
-        )
+        self.assertTrue((source_path / ".codex-plugin" / "plugin.json").is_file())
 
 
 class SkillTests(unittest.TestCase):
@@ -319,7 +315,9 @@ class SkillTests(unittest.TestCase):
 class DocumentationTests(unittest.TestCase):
     def test_local_markdown_links_resolve_inside_the_repository(self):
         documents = sorted(
-            path for path in ROOT.rglob("*.md") if ".git" not in path.parts
+            path
+            for path in ROOT.rglob("*.md")
+            if IGNORED_DOCUMENT_DIRECTORIES.isdisjoint(path.parts)
         )
         self.assertTrue(documents)
 
