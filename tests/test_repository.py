@@ -8,7 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_MANIFEST_PATH = ROOT / ".codex-plugin" / "plugin.json"
 MARKETPLACE_PATH = ROOT / ".agents" / "plugins" / "marketplace.json"
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
-TEST_COMMAND = "python3 -B -m unittest discover -s tests -p 'test_*.py' -v"
+TEST_COMMAND = "python -B -m unittest discover -s tests -p 'test_*.py' -v"
+SUPPORTED_CI_RUNNERS = ("windows-latest", "macos-latest", "ubuntu-latest")
 IGNORED_DOCUMENT_DIRECTORIES = {".git", ".venv"}
 
 NAME_PATTERN = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
@@ -355,6 +356,18 @@ class DocumentationTests(unittest.TestCase):
         ):
             with self.subTest(path=path.relative_to(ROOT)):
                 self.assertIn(TEST_COMMAND, path.read_text(encoding="utf-8"))
+
+    def test_workflow_covers_supported_operating_systems(self):
+        workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+        self.assertIn("runs-on: ${{ matrix.os }}", workflow)
+        runner_matrix = "\n".join(
+            f"          - {runner}" for runner in SUPPORTED_CI_RUNNERS
+        )
+        self.assertIn(runner_matrix, workflow)
+
+        self.assertIn("uses: actions/setup-python@v6", workflow)
+        self.assertIn('python-version: "3.13"', workflow)
 
 
 if __name__ == "__main__":

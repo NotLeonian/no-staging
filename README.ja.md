@@ -89,12 +89,12 @@ git diff --cached --name-only
 追加のパッケージをインストールせずに、リポジトリのテストを実行できます。
 
 ```console
-python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+python -B -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 テストでは、JSON ファイルを解析できること、プラグインとマーケットプレイスのメタデータが一致すること、ホストがスキルを検出できる構成になっていること、`no-staging` の主要な指示が残っていること、Markdown 文書内の相対リンク先が存在することを確認します。テストの対象はリポジトリの構成と静的な指示です。エージェントの動作は再現しないため、エージェントがスキルに従うことまでは証明しません。
 
-GitHub Actions は、push と pull request のたびに同じコマンドを実行します。
+GitHub Actions は、push と pull request のたびに、Python 3.13 を使用して Windows、macOS、Ubuntu で同じテストを実行します。
 
 ## リポジトリの構成
 

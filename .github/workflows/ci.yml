@@ -10,8 +10,15 @@ permissions:
 
 jobs:
   test:
-    name: Repository tests
-    runs-on: ubuntu-latest
+    name: Repository tests (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - macos-latest
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 5
 
     steps:
@@ -20,5 +27,10 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
       - name: Run the test suite
-        run: python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+        run: python -B -m unittest discover -s tests -p 'test_*.py' -v

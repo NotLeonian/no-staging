@@ -32,13 +32,13 @@ agents, or Git itself.
 Run the dependency-free repository tests locally:
 
 ```console
-python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+python -B -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-GitHub Actions runs the same command for pushes and pull requests. The suite
-validates the manifests, their cross-file metadata, skill discovery, the core
-instruction contract, and local documentation links. It does not replace the
-behavioral checks below.
+For pushes and pull requests, GitHub Actions runs the same suite on Windows,
+macOS, and Ubuntu with Python 3.13. The suite validates the manifests, their
+cross-file metadata, skill discovery, the core instruction contract, and local
+documentation links. It does not replace the behavioral checks below.
 
 When Ruff, mypy, and Pyright are available, run the Python checks from the
 repository root:
