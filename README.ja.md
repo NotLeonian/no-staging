@@ -84,10 +84,25 @@ git diff --cached --name-only
 
 作業を始める前からステージされている変更がある場合、2 番目のコマンドの出力は空になりません。その場合は、作業の前後で出力を比較してください。これらのコマンドは状態を調べるための例であり、ステージングを強制的に防ぐものではありません。
 
+## テスト
+
+追加のパッケージをインストールせずに、リポジトリのテストを実行できます。
+
+```console
+python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+テストでは、JSON ファイルを解析できること、プラグインとマーケットプレイスのメタデータが一致すること、ホストがスキルを検出できる構成になっていること、`no-staging` の主要な指示が残っていること、Markdown 文書内の相対リンク先が存在することを確認します。テストの対象はリポジトリの構成と静的な指示です。エージェントの動作は再現しないため、エージェントがスキルに従うことまでは証明しません。
+
+GitHub Actions は、push と pull request のたびに同じコマンドを実行します。
+
 ## リポジトリの構成
 
 ```text
 no-staging/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── .agents/
 │   └── plugins/
 │       └── marketplace.json
@@ -96,6 +111,8 @@ no-staging/
 ├── skills/
 │   └── no-staging/
 │       └── SKILL.md
+├── tests/
+│   └── test_repository.py
 ├── .editorconfig
 ├── .gitattributes
 ├── .gitignore

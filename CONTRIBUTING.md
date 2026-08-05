@@ -29,6 +29,17 @@ agents, or Git itself.
 
 ## Testing Changes
 
+Run the dependency-free repository tests locally:
+
+```console
+python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+GitHub Actions runs the same command for pushes and pull requests. The suite
+validates the manifests, their cross-file metadata, skill discovery, the core
+instruction contract, and local documentation links. It does not replace the
+behavioral checks below.
+
 Test behavioral changes in a disposable Git repository. Confirm that:
 
 - the agent can create, edit, move, and delete working-tree files;
@@ -39,7 +50,8 @@ Test behavioral changes in a disposable Git repository. Confirm that:
 - the final report distinguishes the agent's actions from pre-existing or
   external staged changes.
 
-Validate the manifests and skill:
+For additional validation in a Codex installation that includes the system
+skill scripts and their Python dependencies, run:
 
 ```console
 python3 -m json.tool .codex-plugin/plugin.json
@@ -49,8 +61,9 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py .
 git diff --check
 ```
 
-The last two Python commands assume that the Codex system skills are installed
-in their default location.
+The two validator commands are optional because they depend on files outside
+this repository. They assume that the Codex system skills are installed in
+their default location and that their Python dependencies are available.
 
 For a local Codex test, register the repository as a marketplace and install
 the plugin:
