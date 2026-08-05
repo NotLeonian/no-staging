@@ -1,0 +1,30 @@
+{
+	"name": "no-staging",
+	"version": "0.1.0",
+	"description": "Direct Codex to leave Git working-tree changes unstaged.",
+	"author": {
+		"name": "Not_Leonian",
+		"url": "https://github.com/NotLeonian"
+	},
+	"homepage": "https://github.com/NotLeonian/no-staging#readme",
+	"repository": "https://github.com/NotLeonian/no-staging",
+	"license": "Apache-2.0",
+	"keywords": [
+		"codex",
+		"git",
+		"skill",
+		"staging"
+	],
+	"skills": "./skills/",
+	"interface": {
+		"displayName": "No Staging",
+		"shortDescription": "Keep Git working-tree changes unstaged.",
+		"longDescription": "Directs Codex to avoid intentional Git index changes while allowing normal working-tree edits and read-only Git inspection.",
+		"developerName": "Not_Leonian",
+		"category": "Productivity",
+		"capabilities": [],
+		"defaultPrompt": [
+			"Use $no-staging for this Git repository and keep all changes unstaged."
+		]
+	}
+}
