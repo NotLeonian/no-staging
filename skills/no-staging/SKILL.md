@@ -1,6 +1,6 @@
 ---
 name: no-staging
-description: Use when working in a Git repository and added or modified files must remain unstaged. Prevents Git index/staging changes.
+description: Keep Git working-tree changes unstaged and avoid intentional Git index/staging changes. Use for Git tasks that add, modify, move, or delete files without staging them.
 ---
 
 # No Staging

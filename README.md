@@ -13,7 +13,7 @@ staging area.
 
 The skill directs the agent to:
 
-- leave added, modified, and deleted files unstaged;
+- leave added, modified, moved, and deleted files unstaged;
 - avoid `git add`, `git stage`, `git commit`, `git mv`, `git rm`, and any
   other command that intentionally changes the index;
 - preserve staged changes that existed before the task;
@@ -54,8 +54,9 @@ $no-staging
 Make the requested changes, but leave every change unstaged.
 ```
 
-A compatible host may also select the skill automatically when the task
-explicitly requires added or modified files to remain unstaged.
+A compatible host may also select the skill automatically when a Git task
+explicitly requires files to be added, modified, moved, or deleted without
+staging them.
 
 ## Limitations
 
