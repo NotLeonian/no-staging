@@ -1,6 +1,8 @@
 ---
 name: no-staging
 description: Keep Git working-tree changes unstaged and avoid intentional Git index/staging changes. Use for Git tasks that add, modify, move, or delete files without staging them.
+metadata:
+  version: "1.0.0"
 ---
 
 # No Staging
