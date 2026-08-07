@@ -105,22 +105,67 @@ If the repository already had staged changes, compare the output before and
 after rather than expecting the second command to be empty. These commands are
 inspection examples, not enforcement.
 
-## Testing
+## Repository Validation
 
-Run the repository test suite without installing additional packages:
+Validate the JSON files and inspect the Markdown and skill content before
+publishing:
 
 ```console
+python3 -m json.tool .codex-plugin/plugin.json
+python3 -m json.tool .agents/plugins/marketplace.json
+python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py .
+git diff --check
+```
+
+The plugin validator depends on Codex system skill files and their Python
+dependencies. It is optional when those files are unavailable. It also checks
+the bundled skill manifest.
+
+Validation confirms the static plugin and skill structure. It does not
+simulate an agent or prove that an agent will follow the skill correctly.
+
+## Testing
+
+Run the repository test suite from the root of a Git working tree. The suite
+uses Git and the Python packages pinned in `tests/requirements.txt`. Install
+the packages before running the tests:
+
+```console
+python -m pip install --disable-pip-version-check -r tests/requirements.txt
 python -B -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 The tests validate the JSON files, cross-check the plugin and marketplace
 metadata, verify skill discovery and the core `no-staging` instructions, and
-check local links in the Markdown documentation. They validate the repository
-structure and static instruction contract; they do not simulate an agent or
-prove that an agent will follow the skill.
+verify the Python check configuration. They check local links in tracked and
+non-ignored untracked files with `.md` or `.markdown` filename extensions
+throughout the working tree; extension matching is case-insensitive. For
+hyperlinks to Markdown documents, the tests also verify nonempty fragments
+against generated heading anchors and explicit `<a name>` custom anchors.
+Heading anchors are generated locally from GitHub's documented rules for case,
+whitespace, punctuation, markup, and duplicate headings. This is not a live
+comparison with GitHub rendering, so future GitHub changes and uncommon Unicode
+edge cases may differ. GitHub Markdown source-line links such as
+`?plain=1#L10` are checked against the target file's line range instead of its
+heading anchors. Fragments for other file formats and browser text-fragment
+directives such as `#:~:text=example` are outside this check. Paths beginning
+with `/` are treated as local paths relative to the repository root; use an
+absolute web URL for a site-root-relative route.
 
-For pushes and pull requests, the GitHub Actions workflow runs the same test
-suite on Windows, macOS, and Ubuntu with Python 3.13.
+The tests validate the repository structure and static instruction contract;
+they do not simulate an agent or prove that an agent will follow the skill.
+Link parsing follows the CommonMark preset provided by `markdown-it-py`;
+syntax that requires a separate Markdown extension is not enabled.
+
+The GitHub Actions workflow runs automatically for pull requests and pushes to
+`main`. Pushes to non-`main` pull request branches therefore produce only the
+pull-request-triggered run. The workflow can also be dispatched manually. Each
+run installs the pinned packages and runs the same test suite on Windows,
+macOS, and Ubuntu with Python 3.13.
+
+The contributor-facing Ruff, mypy, and Pyright commands are documented in
+[CONTRIBUTING.md](CONTRIBUTING.md). The requirements file pins those tools as
+well as the packages used to parse Markdown.
 
 ## Repository Layout
 
@@ -138,6 +183,8 @@ no-staging/
 │   └── no-staging/
 │       └── SKILL.md
 ├── tests/
+│   ├── pyproject.toml
+│   ├── requirements.txt
 │   └── test_repository.py
 ├── .editorconfig
 ├── .gitattributes

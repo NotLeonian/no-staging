@@ -27,21 +27,44 @@ When changing its behavior:
 Do not claim that the skill can control users, IDEs, other processes, other
 agents, or Git itself.
 
+The plugin manifest and the skill metadata have separate version scopes. Bump
+the plugin version for packaging changes and the skill metadata version for
+changes to its instruction contract. A change may require one or both.
+
 ## Testing Changes
 
-Run the dependency-free repository tests locally:
+Run the repository tests from the root of a Git working tree. The suite uses
+Git and the Python packages pinned in `tests/requirements.txt`. Install the
+packages before running the tests:
 
 ```console
+python -m pip install --disable-pip-version-check -r tests/requirements.txt
 python -B -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-For pushes and pull requests, GitHub Actions runs the same suite on Windows,
-macOS, and Ubuntu with Python 3.13. The suite validates the manifests, their
-cross-file metadata, skill discovery, the core instruction contract, and local
-documentation links. It does not replace the behavioral checks below.
+GitHub Actions runs automatically for pull requests and pushes to `main`.
+Pushes to non-`main` pull request branches therefore produce only the
+pull-request-triggered run. The workflow can also be dispatched manually. Each
+run installs the pinned packages and runs the same suite on Windows, macOS, and
+Ubuntu with Python 3.13. The suite validates the manifests, their cross-file
+metadata, skill discovery, the core instruction contract, the Python check
+configuration, and local documentation links. The link inventory includes
+tracked and non-ignored untracked files with `.md` or `.markdown` filename
+extensions throughout the working tree; extension matching is case-insensitive.
+For Markdown hyperlink targets, nonempty fragments must match a generated
+heading anchor or an explicit `<a name>` custom anchor. The local heading-anchor
+generator implements GitHub's documented rules, but it is not a live comparison
+with GitHub rendering. Markdown source-line links such as `?plain=1#L10` are
+checked against the target file's line range instead. Fragments for other file
+formats and browser text-fragment directives such as `#:~:text=example` are not
+checked. Paths beginning with `/` are treated as local paths relative to the
+repository root; use an absolute web URL for a site-root-relative route. Link
+parsing uses the CommonMark preset; extensions must be enabled deliberately if
+repository documentation begins to depend on them. The suite does not replace
+the behavioral checks below.
 
-When Ruff, mypy, and Pyright are available, run the Python checks from the
-repository root:
+The requirements file also pins Ruff, mypy, and Pyright. Run the Python checks
+from the repository root after installing it:
 
 ```console
 ruff format --check --config tests/pyproject.toml tests/test_repository.py
@@ -51,7 +74,10 @@ pyright --project tests/pyproject.toml tests/test_repository.py
 ```
 
 These commands use the Python 3.13 settings in `tests/pyproject.toml`. To apply
-formatting, omit `--check` from the first command.
+formatting, omit `--check` from the first command. The Pyright configuration
+resolves installed packages from `.venv` at the repository root; install the
+test packages in that environment or override the virtual-environment settings
+locally when using a different environment.
 
 Test behavioral changes in a disposable Git repository. Confirm that:
 
@@ -69,14 +95,13 @@ skill scripts and their Python dependencies, run:
 ```console
 python3 -m json.tool .codex-plugin/plugin.json
 python3 -m json.tool .agents/plugins/marketplace.json
-python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/no-staging
 python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py .
 git diff --check
 ```
 
-The two validator commands are optional because they depend on files outside
-this repository. They assume that the Codex system skills are installed in
-their default location and that their Python dependencies are available.
+The plugin validator is optional because it depends on files outside this
+repository. It assumes that the Codex system skills are installed in their
+default location and also checks the bundled skill manifest.
 
 For a local Codex test, register the repository as a marketplace and install
 the plugin:

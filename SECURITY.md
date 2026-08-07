@@ -26,7 +26,7 @@ Use GitHub's private vulnerability reporting feature on the repository's
 Include:
 
 - a description of the issue and its security impact;
-- the affected plugin version or commit;
+- the affected plugin version, skill version, or commit;
 - the host and environment in which it occurred;
 - minimal reproduction steps; and
 - any suggested mitigation.
