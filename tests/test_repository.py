@@ -19,6 +19,7 @@ MARKETPLACE_PATH = ROOT / ".agents" / "plugins" / "marketplace.json"
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ci.yml"
 PYPROJECT_PATH = ROOT / "tests" / "pyproject.toml"
 REQUIREMENTS_PATH = ROOT / "tests" / "requirements.txt"
+SKILL_AGENT_CONFIG_PATH = ROOT / "skills" / "no-staging" / "agents" / "openai.yaml"
 TEST_COMMAND = "python -B -m unittest discover -s tests -p 'test_*.py' -v"
 TEST_DEPENDENCY_COMMAND = (
     "python -m pip install --disable-pip-version-check -r tests/requirements.txt"
@@ -531,6 +532,7 @@ class RepositoryStructureTests(unittest.TestCase):
             "README.md",
             "SECURITY.md",
             "skills/no-staging/SKILL.md",
+            "skills/no-staging/agents/openai.yaml",
             "tests/pyproject.toml",
             "tests/requirements.txt",
             "tests/test_repository.py",
@@ -753,6 +755,7 @@ class SkillTests(unittest.TestCase):
         self.assertLessEqual(len(fields["description"]), 1024)
         self.assertNotRegex(fields["description"], r"[<>]")
         self.assertEqual(set(fields["metadata"]), {"version"})
+        self.assertEqual(fields["metadata"]["version"], "1.1.0")
         self.assertIsNotNone(SEMVER_PATTERN.fullmatch(fields["metadata"]["version"]))
         self.assertTrue(body)
 
@@ -762,6 +765,36 @@ class SkillTests(unittest.TestCase):
         if version_match is None:
             self.fail("skill metadata must contain a quoted version")
         self.assertIsNotNone(SEMVER_PATTERN.fullmatch(version_match.group(1)))
+
+    def test_skill_requires_explicit_invocation(self):
+        self.assertEqual(
+            SKILL_AGENT_CONFIG_PATH.read_text(encoding="utf-8"),
+            (
+                'interface:\n  display_name: "No Staging"\n'
+                '  short_description: "Keep Git working-tree changes unstaged."\n\n'
+                "policy:\n  allow_implicit_invocation: false\n"
+            ),
+        )
+
+        fields, body = parse_front_matter(self.skill_files[0])
+        normalized_description = " ".join(fields["description"].split())
+        normalized_body = " ".join(body.split())
+        self.assertIn(
+            "Use only when the user explicitly invokes `$no-staging`",
+            normalized_description,
+        )
+        required_statements = (
+            "explicitly invokes `$no-staging`",
+            "Do not infer invocation from an ordinary Git task",
+            (
+                "A natural-language request to use the named skill does not invoke "
+                "it unless it includes `$no-staging`"
+            ),
+            "maintaining, installing, or configuring the skill is not an invocation",
+        )
+        for statement in required_statements:
+            with self.subTest(statement=statement):
+                self.assertIn(statement, normalized_body)
 
     def test_yaml_string_subset_accepts_supported_scalar_syntax(self):
         cases = {
