@@ -2,12 +2,13 @@
 
 [Japanese](README.ja.md)
 
-`no-staging` is a Codex plugin containing an Agent Skill for Git tasks whose
-changes must remain unstaged.
+`no-staging` is a Codex plugin containing an explicitly invoked Agent Skill for
+Git tasks whose changes must remain unstaged.
 
 When the skill is active, it directs the agent to edit the working tree
 normally while avoiding commands that intentionally change the Git index or
-staging area.
+staging area. The skill is used only when the user explicitly invokes
+`$no-staging` or directly asks to use the no-staging skill.
 
 ## Behavior
 
@@ -36,12 +37,12 @@ codex plugin add no-staging@no-staging
 
 Start a new Codex thread after installation so that the skill is loaded.
 
-To install only the skill, copy its `SKILL.md` into the local Agent Skills
+To install only the skill, copy its directory into the local Agent Skills
 directory:
 
 ```console
-mkdir -p "$HOME/.agents/skills/no-staging"
-cp /absolute/path/to/no-staging/skills/no-staging/SKILL.md "$HOME/.agents/skills/no-staging/SKILL.md"
+mkdir -p "$HOME/.agents/skills"
+cp -R /absolute/path/to/no-staging/skills/no-staging "$HOME/.agents/skills/"
 ```
 
 ## Usage
@@ -54,9 +55,10 @@ $no-staging
 Make the requested changes, but leave every change unstaged.
 ```
 
-A compatible host may also select the skill automatically when a Git task
-explicitly requires files to be added, modified, moved, or deleted without
-staging them.
+The skill is not selected automatically for ordinary Git tasks, requests to
+leave changes unstaged, staging-related risks, or mentions of the skill.
+Discussing, maintaining, installing, or configuring the skill does not invoke
+it.
 
 ## Limitations
 
@@ -181,6 +183,8 @@ no-staging/
 │   └── plugin.json
 ├── skills/
 │   └── no-staging/
+│       ├── agents/
+│       │   └── openai.yaml
 │       └── SKILL.md
 ├── tests/
 │   ├── pyproject.toml

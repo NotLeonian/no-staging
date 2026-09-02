@@ -2,11 +2,13 @@
 
 [English](README.md)
 
-`no-staging` は、Git リポジトリで作業するエージェントに、作業ツリーで加えた変更をステージしないよう指示する Agent Skill を収録した Codex プラグインです。
+`no-staging` は、Git リポジトリで作業するエージェントに、作業ツリーで加えた変更をステージしないよう指示する、明示的に呼び出すための Agent Skill を収録した Codex プラグインです。
 
 ## 概要
 
 このスキルを有効にすると、エージェントは作業ツリー内のファイルを作成、編集、移動、削除できますが、Git インデックスを意図的に変更するコマンドは実行しません。
+
+このスキルは、ユーザーが `$no-staging` を明示的に呼び出すか、no-staging スキルを使用するよう直接依頼した場合にのみ使用します。
 
 作業を終えるときには、追加、変更、移動、削除したファイルを報告し、それらをステージしていないことを明記します。
 
@@ -36,11 +38,11 @@ codex plugin add no-staging@no-staging
 
 インストールした後は、新しい Codex スレッドを開始してスキルを読み込んでください。
 
-スキルだけを使う場合は、`SKILL.md` をローカルの Agent Skills ディレクトリへコピーします。
+スキルだけを使う場合は、スキルのディレクトリをローカルの Agent Skills ディレクトリへコピーします。
 
 ```console
-mkdir -p "$HOME/.agents/skills/no-staging"
-cp /absolute/path/to/no-staging/skills/no-staging/SKILL.md "$HOME/.agents/skills/no-staging/SKILL.md"
+mkdir -p "$HOME/.agents/skills"
+cp -R /absolute/path/to/no-staging/skills/no-staging "$HOME/.agents/skills/"
 ```
 
 ## 使い方
@@ -54,7 +56,8 @@ $no-staging
 ただし、どの変更もステージしないでください。
 ```
 
-互換性のあるホストでは、ファイルを追加、変更、移動、削除してもステージしないよう明示した Git タスクに対して、このスキルが自動的に選ばれる場合もあります。
+通常の Git タスク、変更をステージしないよう求める依頼、ステージングに関するリスク、またはこのスキルへの言及だけを理由に、このスキルが自動的に選ばれることはありません。
+このスキルについての相談、保守、インストール、設定も、このスキルの呼び出しには当たりません。
 
 ## このスキルが保証しないこと
 
@@ -168,6 +171,8 @@ no-staging/
 │   └── plugin.json
 ├── skills/
 │   └── no-staging/
+│       ├── agents/
+│       │   └── openai.yaml
 │       └── SKILL.md
 ├── tests/
 │   ├── pyproject.toml

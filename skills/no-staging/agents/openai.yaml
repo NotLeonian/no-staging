@@ -1,0 +1,6 @@
+interface:
+  display_name: "No Staging"
+  short_description: "Keep Git working-tree changes unstaged."
+
+policy:
+  allow_implicit_invocation: false
