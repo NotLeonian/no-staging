@@ -780,12 +780,16 @@ class SkillTests(unittest.TestCase):
         normalized_description = " ".join(fields["description"].split())
         normalized_body = " ".join(body.split())
         self.assertIn(
-            "Use only when the user explicitly requests this skill",
+            "Use only when the user explicitly invokes `$no-staging`",
             normalized_description,
         )
         required_statements = (
             "explicitly invokes `$no-staging`",
             "Do not infer invocation from an ordinary Git task",
+            (
+                "A natural-language request to use the named skill does not invoke "
+                "it unless it includes `$no-staging`"
+            ),
             "maintaining, installing, or configuring the skill is not an invocation",
         )
         for statement in required_statements:

@@ -8,7 +8,7 @@ Git tasks whose changes must remain unstaged.
 When the skill is active, it directs the agent to edit the working tree
 normally while avoiding commands that intentionally change the Git index or
 staging area. The skill is used only when the user explicitly invokes
-`$no-staging` or directly asks to use the no-staging skill.
+`$no-staging`.
 
 ## Behavior
 
@@ -57,8 +57,9 @@ Make the requested changes, but leave every change unstaged.
 
 The skill is not selected automatically for ordinary Git tasks, requests to
 leave changes unstaged, staging-related risks, or mentions of the skill.
-Discussing, maintaining, installing, or configuring the skill does not invoke
-it.
+A natural-language request to use the named skill does not invoke it unless it
+includes `$no-staging`. Discussing, maintaining, installing, or configuring the
+skill does not invoke it.
 
 ## Limitations
 

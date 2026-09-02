@@ -1,6 +1,6 @@
 ---
 name: no-staging
-description: Keep Git working-tree changes unstaged and avoid intentional Git index/staging changes. Use only when the user explicitly requests this skill; never infer invocation from an ordinary Git task, a request to leave changes unstaged, or a mention of the skill.
+description: Keep Git working-tree changes unstaged and avoid intentional Git index/staging changes. Use only when the user explicitly invokes `$no-staging`; never infer invocation from an ordinary Git task, a request to leave changes unstaged, or a mention of the skill.
 metadata:
   version: "1.1.0"
 ---
@@ -9,12 +9,13 @@ metadata:
 
 ## Invocation Requirement
 
-Apply this skill only when the user explicitly invokes `$no-staging` or directly
-asks to use the no-staging skill.
+Apply this skill only when the user explicitly invokes `$no-staging`.
 
 Do not infer invocation from an ordinary Git task, a request to leave changes
-unstaged, a staging-related risk, or a mention of the skill. Discussing,
-maintaining, installing, or configuring the skill is not an invocation.
+unstaged, a staging-related risk, or a mention of the skill. A natural-language
+request to use the named skill does not invoke it unless it includes
+`$no-staging`. Discussing, maintaining, installing, or configuring the skill is
+not an invocation.
 
 Once the skill is explicitly invoked, apply the rules below for the current
 task.
