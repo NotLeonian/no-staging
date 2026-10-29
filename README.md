@@ -61,6 +61,10 @@ A natural-language request to use the named skill does not invoke it unless it
 includes `$no-staging`. Discussing, maintaining, installing, or configuring the
 skill does not invoke it.
 
+If the user requests an action involving staging in a later turn without
+explicitly invoking `$no-staging` again, that instruction takes precedence over
+the skill. The earlier invocation alone does not require separate permission.
+
 ## Limitations
 
 `no-staging` is an instruction for an agent, not a Git enforcement mechanism.
@@ -80,8 +84,10 @@ skill does not invoke it.
   remain subject to the host's other instructions and safeguards.
 - Third-party commands may have index-changing side effects that the skill
   cannot independently block.
-- A task that inherently requires staging cannot proceed until the user gives
-  explicit permission.
+- While the skill is active, a task that inherently requires staging cannot
+  proceed until the user gives explicit permission. A later instruction
+  involving staging takes precedence if that turn does not explicitly invoke
+  `$no-staging` again.
 
 Git commands commonly treated as read-only can still invoke FSMonitor, filters,
 external diff helpers, pagers, or other configured programs. They may also

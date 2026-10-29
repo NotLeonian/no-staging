@@ -755,7 +755,7 @@ class SkillTests(unittest.TestCase):
         self.assertLessEqual(len(fields["description"]), 1024)
         self.assertNotRegex(fields["description"], r"[<>]")
         self.assertEqual(set(fields["metadata"]), {"version"})
-        self.assertEqual(fields["metadata"]["version"], "1.1.0")
+        self.assertEqual(fields["metadata"]["version"], "1.2.0")
         self.assertIsNotNone(SEMVER_PATTERN.fullmatch(fields["metadata"]["version"]))
         self.assertTrue(body)
 

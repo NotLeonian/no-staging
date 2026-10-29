@@ -85,7 +85,11 @@ Test behavioral changes in a disposable Git repository. Confirm that:
 - the agent does not stage changes, even temporarily;
 - staged changes that existed before the test remain unchanged;
 - the agent avoids commands that intentionally modify the index;
-- the agent asks for explicit permission when staging is required; and
+- the agent asks for explicit permission when staging is required while the
+  skill is active;
+- a later user instruction involving staging takes precedence when that turn
+  does not explicitly invoke `$no-staging`, without a separate permission
+  request solely because of the earlier invocation; and
 - the final report distinguishes the agent's actions from pre-existing or
   external staged changes.
 
@@ -125,8 +129,10 @@ A pull request should:
 
 The skill governs an agent only while it is active. It does not prohibit human
 contributors from using their normal Git workflow. If you test while the skill
-is active, disable it or obtain the required permission before asking that
-agent to stage or commit changes.
+is active, obtain the required permission before staging or committing. If a
+later turn instructs the agent to stage or commit without explicitly invoking
+`$no-staging` again, that instruction takes precedence over the skill; the
+earlier invocation alone does not require separate permission.
 
 ## License
 

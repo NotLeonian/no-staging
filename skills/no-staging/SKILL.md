@@ -2,7 +2,7 @@
 name: no-staging
 description: Keep Git working-tree changes unstaged and avoid intentional Git index/staging changes. Use only when the user explicitly invokes `$no-staging`; never infer invocation from an ordinary Git task, a request to leave changes unstaged, or a mention of the skill.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # No Staging
@@ -19,6 +19,11 @@ not an invocation.
 
 Once the skill is explicitly invoked, apply the rules below for the current
 task.
+
+If, in a later turn that does not explicitly invoke `$no-staging`, the user
+instructs you to perform an action that involves staging, prioritize the user's
+instruction over this skill. Do not require separate permission solely because
+this skill was invoked in an earlier turn.
 
 Keep all task changes in the working tree and avoid intentionally changing the
 Git index or staging area.
