@@ -755,7 +755,7 @@ class SkillTests(unittest.TestCase):
         self.assertLessEqual(len(fields["description"]), 1024)
         self.assertNotRegex(fields["description"], r"[<>]")
         self.assertEqual(set(fields["metadata"]), {"version"})
-        self.assertEqual(fields["metadata"]["version"], "1.1.0")
+        self.assertEqual(fields["metadata"]["version"], "1.2.0")
         self.assertIsNotNone(SEMVER_PATTERN.fullmatch(fields["metadata"]["version"]))
         self.assertTrue(body)
 
@@ -851,6 +851,15 @@ class SkillTests(unittest.TestCase):
                 "existed before the task."
             ),
             "explicit permission",
+            (
+                "If, in a later turn that does not explicitly invoke `$no-staging`, "
+                "the user instructs you to perform an action that involves staging, "
+                "prioritize the user's instruction over this skill."
+            ),
+            (
+                "Do not require separate permission solely because this skill was "
+                "invoked in an earlier turn."
+            ),
             "explicitly state that you did not stage them",
             "This skill governs only your actions while it is active.",
             (
